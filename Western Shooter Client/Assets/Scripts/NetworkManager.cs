@@ -10,6 +10,7 @@ public enum ClientToServer : ushort
 {
     username = 0,
     inputs = 2,
+    useItem = 3,
 }
 public enum ServerToClient : ushort
 {
@@ -17,6 +18,7 @@ public enum ServerToClient : ushort
     spawnPlayer = 1,
     playerPosition = 2,
     tickSync = 3,
+    playerSetHeldObject = 4,
 }
 public class NetworkManager : MonoBehaviour
 {

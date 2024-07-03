@@ -8,6 +8,7 @@ public enum ClientToServer : ushort
 {
     username = 0,
     inputs = 2,
+    useItem = 3,
 }
 public enum ServerToClient : ushort
 {
@@ -15,6 +16,7 @@ public enum ServerToClient : ushort
     spawnPlayer = 1,
     playerPosition = 2,
     tickSync = 3,
+    playerSetHeldObject = 4,
 }
 public class NetworkManager : MonoBehaviour
 {
@@ -69,6 +71,15 @@ public class NetworkManager : MonoBehaviour
                 spawnMessage.AddUShort(p.PlayerID);
                 spawnMessage.AddVector3(p.self.transform.position);
                 Singleton.Server.Send(spawnMessage, player.PlayerID);
+
+                PlayerItemHandler itemHandler = p.self.GetComponent<PlayerItemHandler>();
+                if (itemHandler)
+                {
+                    Message heldObjectMessage = Message.Create(MessageSendMode.Reliable, ServerToClient.playerSetHeldObject);
+                    heldObjectMessage.AddUShort(p.PlayerID);
+                    heldObjectMessage.AddUShort(itemHandler.currentHeldObject != null ? itemHandler.currentHeldObject.holdable.id : ushort.MaxValue);
+                    Singleton.Server.Send(heldObjectMessage, player.PlayerID);
+                }
             }
         }
     }

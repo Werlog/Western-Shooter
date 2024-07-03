@@ -58,5 +58,12 @@ public class GameManager : MonoBehaviour
         message.AddUShort(player.PlayerID);
         message.AddVector3(position);
         NetworkManager.Singleton.Server.SendToAll(message);
+
+        PlayerItemHandler itemHandler = player.self.GetComponent<PlayerItemHandler>();
+        itemHandler.player = player;
+        if (HoldableObjectManager.Singleton.holdableObjects.TryGetValue(0, out HoldableObject holdable))
+        {
+            itemHandler.EquipHoldable(holdable);
+        }
     }
 }

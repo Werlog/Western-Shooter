@@ -1,4 +1,5 @@
 using Riptide;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -51,6 +52,22 @@ public class MessageListener : MonoBehaviour
             PlayerMovement movement = player.self.GetComponent<PlayerMovement>();
 
             movement.ReceiveInputs(new ClientInputs(inputs, rotation, requestNumber));
+        }
+    }
+
+    [MessageHandler((ushort)ClientToServer.useItem)]
+    private static void OnReceiveUseItem(ushort fromClientId, Message message)
+    {
+        HeldObjectAction action = (HeldObjectAction)message.GetByte();
+        ushort tick = message.GetUShort();
+
+        if (GameManager.Singleton.players.TryGetValue(fromClientId, out Player player) && player.self != null)
+        {
+            PlayerItemHandler itemHandler = player.self.GetComponent<PlayerItemHandler>();
+            if (itemHandler && itemHandler.currentHeldObject != null)
+            {
+                itemHandler.currentHeldObject.OnAction(action);
+            }
         }
     }
 }

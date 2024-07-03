@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1dca6851fd198141a1fecce92ea7792, type: 3}
+  m_Name: Revolver
+  m_EditorClassIdentifier: 
+  name: Revolver
+  id: 0
+  firstPersonPrefab: {fileID: 8560501293782606740, guid: a5c6ee1d79a61834eabff00dcea998de, type: 3}
+  thirdPersonObjectName: Revolver
+  shootDelay: 0.75
+  blastEffect: {fileID: 4684500789913822179, guid: dc20b029516b8cd42add739073590073, type: 3}
+  bulletTracers: 1
+  bulletTracerPrefab: {fileID: 5195437493439934937, guid: b81fa137d1eec5d4b9bee1725ac5601f, type: 3}
+  idleAnimation: {fileID: 7400000, guid: 8d3b3d695d48e0845a15444dc265ee99, type: 2}
+  shootAnimation: {fileID: 7400000, guid: 6a885f87c2de86d4987490c3ba3b507a, type: 2}
+  shootSound: {fileID: 0}

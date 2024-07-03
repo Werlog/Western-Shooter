@@ -86,4 +86,26 @@ public class MessageListener : MonoBehaviour
         uint tick = message.GetUInt();
         TickManager.Singleton.OnReceiveTickSync(tick);
     }
+
+    [MessageHandler((ushort)ServerToClient.playerSetHeldObject)]
+    private static void OnReceiveSetHeldObject(Message message)
+    {
+        ushort playerId = message.GetUShort();
+        ushort objectId = message.GetUShort();
+
+        if (GameManager.Singleton.players.TryGetValue(playerId, out Player player))
+        {
+            if (player.IsLocal && HoldableObjectManager.Singleton.holdableObjects.TryGetValue(objectId, out HoldableObject holdable))
+            {
+                PlayerItemHandler itemHandler = player.self.GetComponent<PlayerItemHandler>();
+                if (itemHandler != null)
+                {
+                    itemHandler.EquipHoldable(holdable);
+                }
+            }else if (!player.IsLocal)
+            {
+                // TODO: Implement for remote players
+            }
+        }
+    }
 }
