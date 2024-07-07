@@ -43,7 +43,7 @@ public class PlayerMovement : MonoBehaviour
 
     private bool jumpRequest = false;
 
-    private Vector3 savedVelocity;
+    public Vector3 SavedVelocity { get; private set; }
 
     private bool[] inputs;
 
@@ -148,7 +148,7 @@ public class PlayerMovement : MonoBehaviour
         jumpRequest = withInputs[4];
 
         rb.isKinematic = false;
-        rb.velocity = savedVelocity;
+        rb.velocity = SavedVelocity;
 
         Transform orientation = this.orientation;
         if (rewindedState != null)
@@ -176,10 +176,10 @@ public class PlayerMovement : MonoBehaviour
         rb.AddForce(movementDirection, ForceMode.Force);
 
         Physics.Simulate(TickManager.Singleton.TimeBetweenTicks);
-        savedVelocity = rb.velocity;
+        SavedVelocity = rb.velocity;
         rb.isKinematic = true;
 
-        PredictedState state = new PredictedState(withInputs, requestNumber, orientation.eulerAngles, transform.position, savedVelocity);
+        PredictedState state = new PredictedState(withInputs, requestNumber, orientation.eulerAngles, transform.position, SavedVelocity);
 
         return state;
     }
@@ -222,7 +222,7 @@ public class PlayerMovement : MonoBehaviour
             predicted.predictedPosition = correctPosition;
             predicted.predictedVelocity = correctVelocity;
 
-            savedVelocity = correctVelocity;
+            SavedVelocity = correctVelocity;
 
             for (uint i = fromRequestNumber + 1; i < requestNumber; i++)
             {
