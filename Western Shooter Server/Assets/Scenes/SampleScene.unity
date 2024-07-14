@@ -570,6 +570,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Environment
       objectReference: {fileID: 0}
+    - target: {fileID: 9125392978990275887, guid: 1d82fbdba440d8242a52ce1f70e92c9f,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 4.953939
+      objectReference: {fileID: 0}
+    - target: {fileID: 9125392978990275887, guid: 1d82fbdba440d8242a52ce1f70e92c9f,
+        type: 3}
+      propertyPath: m_Center.x
+      value: -0.0966896
+      objectReference: {fileID: 0}
+    - target: {fileID: 9125392978990275887, guid: 1d82fbdba440d8242a52ce1f70e92c9f,
+        type: 3}
+      propertyPath: m_Center.y
+      value: 2.4725232
+      objectReference: {fileID: 0}
+    - target: {fileID: 9125392978990275887, guid: 1d82fbdba440d8242a52ce1f70e92c9f,
+        type: 3}
+      propertyPath: m_Center.z
+      value: -0.10802458
+      objectReference: {fileID: 0}
     - target: {fileID: 9125392979398608788, guid: 1d82fbdba440d8242a52ce1f70e92c9f,
         type: 3}
       propertyPath: m_Size.y

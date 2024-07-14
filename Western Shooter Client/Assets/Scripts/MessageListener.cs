@@ -65,13 +65,14 @@ public class MessageListener : MonoBehaviour
             Vector3 position = message.GetVector3();
             Vector3 rotation = message.GetVector3();
             Vector3 velocity = message.GetVector3();
+            LowerAnimation animation = (LowerAnimation)message.GetByte();
 
             if (!player.IsLocal)
             {
                 Interpolator interpolator = player.self.GetComponent<Interpolator>();
 
                 player.self.transform.eulerAngles = rotation;
-                interpolator.NewUpdate(new TransformUpdate(tick, position));
+                interpolator.NewUpdate(new TransformUpdate(tick, position, animation));
             }else
             {
                 PlayerMovement movement = player.self.GetComponent<PlayerMovement>();

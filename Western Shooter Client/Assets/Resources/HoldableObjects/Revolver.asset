@@ -14,12 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Revolver
   id: 0
-  firstPersonPrefab: {fileID: 8560501293782606740, guid: a5c6ee1d79a61834eabff00dcea998de, type: 3}
+  firstPersonPrefab: {fileID: 8560501293782606740, guid: a5c6ee1d79a61834eabff00dcea998de,
+    type: 3}
   thirdPersonObjectName: Revolver
   shootDelay: 0.75
-  blastEffect: {fileID: 4684500789913822179, guid: dc20b029516b8cd42add739073590073, type: 3}
+  blastEffect: {fileID: 4684500789913822179, guid: dc20b029516b8cd42add739073590073,
+    type: 3}
   bulletTracers: 1
-  bulletTracerPrefab: {fileID: 5195437493439934937, guid: b81fa137d1eec5d4b9bee1725ac5601f, type: 3}
+  bulletTracerPrefab: {fileID: 5195437493439934937, guid: b81fa137d1eec5d4b9bee1725ac5601f,
+    type: 3}
   idleAnimation: {fileID: 7400000, guid: 8d3b3d695d48e0845a15444dc265ee99, type: 2}
   shootAnimation: {fileID: 7400000, guid: 6a885f87c2de86d4987490c3ba3b507a, type: 2}
-  shootSound: {fileID: 0}
+  shootSound: {fileID: 8300000, guid: 74822f00c401c1c4cb85c5bfa4e22c4c, type: 3}

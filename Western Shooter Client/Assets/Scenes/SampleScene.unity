@@ -317,7 +317,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   localPlayerPrefab: {fileID: 3511996247757729008, guid: 9de1b70f94577bb46b8c7b561285e8b5,
     type: 3}
-  remotePlayerPrefab: {fileID: 8722818170762529701, guid: ee4959efbb2b3f642b2268c8340c6c35,
+  remotePlayerPrefab: {fileID: 2375961226227672930, guid: 362b04375b4f8e44e92d821d2eade510,
     type: 3}
 --- !u!4 &80046549
 Transform:
@@ -667,10 +667,10 @@ Light:
     m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 1
-    m_Bias: 0.05
+    m_Strength: 0.8
+    m_Bias: 0
     m_NormalBias: 0
-    m_NearPlane: 0.2
+    m_NearPlane: 0.1
     m_CullingMatrixOverride:
       e00: 1
       e01: 0

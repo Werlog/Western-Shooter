@@ -6,6 +6,7 @@ using UnityEngine;
 public class Interpolator : MonoBehaviour
 {
     [SerializeField] private float movementThreshold = 0.05f;
+    [SerializeField] private RemotePlayerAnimationController animationController;
 
     private List<TransformUpdate> transformUpdates;
     private TransformUpdate from;
@@ -15,8 +16,8 @@ public class Interpolator : MonoBehaviour
 
     void Awake()
     {
-        from = new TransformUpdate(TickManager.Singleton.CurrentTick, transform.position);
-        to = new TransformUpdate(TickManager.Singleton.CurrentTick + 2, transform.position);
+        from = new TransformUpdate(TickManager.Singleton.CurrentTick, transform.position, LowerAnimation.Idle);
+        to = new TransformUpdate(TickManager.Singleton.CurrentTick + 2, transform.position, LowerAnimation.Idle);
         transformUpdates = new List<TransformUpdate>();
     }
 
@@ -32,7 +33,11 @@ public class Interpolator : MonoBehaviour
             if (to != null)
                 from = to;
             to = GetOldestTransformUpdate();
-            if (to != null) timeElapsed = 0f;
+            if (to != null) 
+            {
+                animationController.SetLowerBodyAnimation(to.Animation);
+                timeElapsed = 0f;
+            }
         }
         timeElapsed += Time.deltaTime;
     }

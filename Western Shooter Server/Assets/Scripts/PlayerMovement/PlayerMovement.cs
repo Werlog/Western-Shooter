@@ -48,6 +48,8 @@ public class PlayerMovement : MonoBehaviour
 
     private uint currentRequestNumber;
 
+    private LowerAnimation animationId;
+
     void Start()
     {
         inputQueue = new Queue<ClientInputs>();
@@ -137,6 +139,16 @@ public class PlayerMovement : MonoBehaviour
         rb.isKinematic = false;
         rb.velocity = savedVelocity;
 
+        if (IsGrounded)
+        {
+            if (inputDirection.x != 0f || inputDirection.z != 0)
+            {
+                animationId = LowerAnimation.Walking;
+            }
+            else animationId = LowerAnimation.Idle;
+        }
+        else animationId = LowerAnimation.Falling;
+
         Vector3 movementDirection = orientation.right * inputDirection.x + orientation.forward * inputDirection.z;
         if (IsOnSlope)
         {
@@ -172,6 +184,7 @@ public class PlayerMovement : MonoBehaviour
         message.AddVector3(transform.position);
         message.AddVector3(orientation.eulerAngles);
         message.AddVector3(savedVelocity);
+        message.AddByte((byte)animationId);
         NetworkManager.Singleton.Server.SendToAll(message);
     }
 
@@ -214,4 +227,10 @@ public class PlayerMovement : MonoBehaviour
     {
         rb.drag = IsGrounded ? groundDrag : airDrag;
     }
+}
+public enum LowerAnimation : byte
+{
+    Idle = 0,
+    Walking = 1,
+    Falling = 2,
 }
