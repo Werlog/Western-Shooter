@@ -42,6 +42,7 @@ public class HeldGun : HeldObject
         if (gun.shootSound != null)
         {
             audioSource.clip = gun.shootSound;
+            audioSource.pitch = Random.Range(0.9f, 1.1f);
             audioSource.Play();
         }
         animator.Play(gun.shootAnimation.name);

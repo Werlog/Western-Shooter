@@ -109,4 +109,63 @@ public class MessageListener : MonoBehaviour
             }
         }
     }
+
+    [MessageHandler((ushort)ServerToClient.playerTakeDamage)]
+    private static void OnReceivePlayerTakeDamage(Message message)
+    {
+        ushort playerId = message.GetUShort();
+        
+        if (GameManager.Singleton.players.TryGetValue(playerId, out Player player))
+        {
+            int health = message.GetInt();
+            bool hasDamager = message.GetBool();
+
+            #region Damager
+            if (hasDamager)
+            {
+                ushort damagerId = message.GetUShort();
+                if (GameManager.Singleton.players.TryGetValue(damagerId, out Player damager))
+                {
+                    if (damager.IsLocal)
+                    {
+                        // TODO: Add hitmarkers and other shit
+                    }
+                }
+            }
+            #endregion
+
+            player.Health = health;
+        }
+    }
+
+    [MessageHandler((ushort)ServerToClient.playerDeath)]
+    private static void OnReceivePlayerDeath(Message message)
+    {
+        ushort playerId = message.GetUShort();
+        bool hasKiller = message.GetBool();
+        if (GameManager.Singleton.players.TryGetValue(playerId, out Player killed))
+        {
+            if (hasKiller && GameManager.Singleton.players.TryGetValue(message.GetUShort(), out Player killer))
+            {
+                killed.Die(killer);
+                return;
+            }
+
+            killed.Die();
+        }
+    }
+
+    [MessageHandler((ushort)ServerToClient.playerRespawn)]
+    private static void OnReceivePlayerRespawn(Message message)
+    {
+        ushort playerId = message.GetUShort();
+        int health = message.GetInt();
+        Vector3 position = message.GetVector3();
+
+
+        if (GameManager.Singleton.players.TryGetValue(playerId, out Player player))
+        {
+            player.Respawn(position, health);
+        }
+    }
 }

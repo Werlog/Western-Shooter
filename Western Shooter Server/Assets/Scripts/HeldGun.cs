@@ -26,8 +26,27 @@ public class HeldGun : HeldObject
         {
             if (hit.collider.CompareTag("Player"))
             {
-                Debug.Log("A player has been shot");
+                Player hitPlayer = hit.collider.GetComponent<PlayerMovement>().player;
+
+                float distance = Vector3.Distance(Look.position, hit.point);
+
+                hitPlayer.Damage(GetDamage(distance), player);
             }
+
+            Debug.DrawLine(Look.position, hit.point, Color.red, 5f);
         }
+    }
+
+    private int GetDamage(float distance)
+    {
+        for (int i = 0; i < gun.damages.Count; i++)
+        {
+            DistanceDamage damage = gun.damages[i];
+            if (distance > damage.maxDistance) continue;
+
+            return damage.bodyDamage;
+        }
+
+        return gun.damages[gun.damages.Count - 1].bodyDamage;
     }
 }

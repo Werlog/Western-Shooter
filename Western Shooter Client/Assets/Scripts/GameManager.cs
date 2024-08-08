@@ -26,11 +26,15 @@ public class GameManager : MonoBehaviour
 
     public Dictionary<ushort, Player> players = new Dictionary<ushort, Player>();
 
+    public GameObject spectatorCameraPrefab;
+
     [Header("Player Prefabs")]
     [SerializeField] private GameObject localPlayerPrefab;
     [SerializeField] private GameObject remotePlayerPrefab;
 
     public Player LocalPlayer { get; private set; }
+
+    private GameObject currentSpectatorCamera;
 
     private void Awake()
     {
@@ -55,6 +59,24 @@ public class GameManager : MonoBehaviour
         if (player.IsLocal)
         {
             UIManager.Singleton.DisableConnectScreen();
+        }
+    }
+
+    public void SpawnSpectatorCamera(Vector3 position, Vector3 rotation)
+    {
+        if (currentSpectatorCamera != null)
+        {
+            Destroy(currentSpectatorCamera);
+        }
+
+        currentSpectatorCamera = Instantiate(spectatorCameraPrefab, position, Quaternion.Euler(rotation));
+    }
+
+    public void DespawnSpectatorCamera()
+    {
+        if (currentSpectatorCamera != null)
+        {
+            Destroy(currentSpectatorCamera);
         }
     }
 }

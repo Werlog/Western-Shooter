@@ -33,6 +33,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_InputField usernameField;
     [SerializeField] private TMP_InputField ipField;
 
+    [Header("HUD")]
+    [SerializeField] private Animator healthDisplayAnimator;
+    [SerializeField] private TextMeshProUGUI healthText;
+
     private void Awake()
     {
         Singleton = this;
@@ -87,5 +91,18 @@ public class UIManager : MonoBehaviour
         Message message = Message.Create(MessageSendMode.Reliable, ClientToServer.username);
         message.AddString(usernameField.text);
         NetworkManager.Singleton.Client.Send(message);
+    }
+
+    public void SetHealthText(int health)
+    {
+        healthText.text = health.ToString();
+
+        if (health < Player.PlayerMaxHealth * 0.25 && !healthDisplayAnimator.GetCurrentAnimatorStateInfo(0).IsName("LowHealth"))
+        {
+            healthDisplayAnimator.Play("LowHealth");
+        } else if (health >= Player.PlayerMaxHealth * 0.25)
+        {
+            healthDisplayAnimator.Play("NormalHealth");
+        }
     }
 }

@@ -19,6 +19,9 @@ public enum ServerToClient : ushort
     playerPosition = 2,
     tickSync = 3,
     playerSetHeldObject = 4,
+    playerTakeDamage = 5,
+    playerDeath = 6,
+    playerRespawn = 7,
 }
 public class NetworkManager : MonoBehaviour
 {
@@ -56,7 +59,7 @@ public class NetworkManager : MonoBehaviour
 
     private void Start()
     {
-        RiptideLogger.Initialize(Debug.Log, Debug.Log, Debug.LogWarning, Debug.LogError, false); ;
+        RiptideLogger.Initialize(Debug.Log, Debug.Log, Debug.LogWarning, Debug.LogError, false);
         DontDestroyOnLoad(gameObject);
         Client = new Client();
         Client.Disconnected += OnDisconnect;

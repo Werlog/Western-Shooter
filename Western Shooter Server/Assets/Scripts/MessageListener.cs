@@ -48,10 +48,14 @@ public class MessageListener : MonoBehaviour
         {
             uint requestNumber = message.GetUInt();
             Vector3 rotation = message.GetVector3();
+            Vector3 camRotation = message.GetVector3();
             bool[] inputs = message.GetBools(5);
             PlayerMovement movement = player.self.GetComponent<PlayerMovement>();
 
-            movement.ReceiveInputs(new ClientInputs(inputs, rotation, requestNumber));
+            rotation.x = 0;
+            rotation.z = 0;
+
+            movement.ReceiveInputs(new ClientInputs(inputs, rotation, camRotation, requestNumber));
         }
     }
 

@@ -17,6 +17,9 @@ public enum ServerToClient : ushort
     playerPosition = 2,
     tickSync = 3,
     playerSetHeldObject = 4,
+    playerTakeDamage = 5,
+    playerDeath = 6,
+    playerRespawn = 7,
 }
 public class NetworkManager : MonoBehaviour
 {
@@ -79,6 +82,14 @@ public class NetworkManager : MonoBehaviour
                     heldObjectMessage.AddUShort(p.PlayerID);
                     heldObjectMessage.AddUShort(itemHandler.currentHeldObject != null ? itemHandler.currentHeldObject.holdable.id : ushort.MaxValue);
                     Singleton.Server.Send(heldObjectMessage, player.PlayerID);
+                }
+
+                if (!p.IsAlive)
+                {
+                    Message deathMessage = Message.Create(MessageSendMode.Reliable, ServerToClient.playerDeath);
+                    deathMessage.AddUShort(p.PlayerID);
+                    deathMessage.AddBool(false);
+                    Singleton.Server.Send(deathMessage, player.PlayerID);
                 }
             }
         }

@@ -9,6 +9,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private Transform orientation;
+    [SerializeField] private Transform camTransform;
     [Header("Movement Settings")]
     [SerializeField] private float movementSpeed = 15f;
     [SerializeField] private float midAirMultiplier = 0.1f;
@@ -189,6 +190,7 @@ public class PlayerMovement : MonoBehaviour
         Message message = Message.Create(MessageSendMode.Unreliable, ClientToServer.inputs);
         message.AddUInt(requestNumber);
         message.AddVector3(orientation.eulerAngles);
+        message.AddVector3(camTransform.eulerAngles);
         message.AddBools(inputs, false);
         NetworkManager.Singleton.Client.Send(message);
     }

@@ -27,7 +27,11 @@ public class GameManager : MonoBehaviour
 
     public Dictionary<ushort, Player> players = new Dictionary<ushort, Player>();
 
+    [Header("Prefabs")]
     [SerializeField] private GameObject playerPrefab;
+
+    [Header("Game Settings")]
+    [SerializeField] private float respawnDelay = 5f;
 
     private void Awake()
     {
@@ -45,6 +49,17 @@ public class GameManager : MonoBehaviour
         NetworkManager.Singleton.Server.SendToAll(message);
     }
 
+    public void OnPlayerDeath(object sender, PlayerDeathEventArgs e)
+    {
+        StartCoroutine(RespawnPlayer(e.player));
+    }
+
+    private IEnumerator RespawnPlayer(Player player)
+    {
+        yield return new WaitForSeconds(respawnDelay);
+        player.Respawn(new Vector3(0, 10, 0));
+    }
+
     public void SpawnPlayer(Player player, Vector3 position)
     {
         if (player.self != null) return;
@@ -54,9 +69,12 @@ public class GameManager : MonoBehaviour
         player.self.name = $"{player.Username} (ID: {player.PlayerID})";
         player.self.GetComponent<PlayerMovement>().player = player;
 
+        player.DeathEvent += OnPlayerDeath;
+
         Message message = Message.Create(MessageSendMode.Reliable, ServerToClient.spawnPlayer);
         message.AddUShort(player.PlayerID);
         message.AddVector3(position);
+        message.AddInt(player.Health);
         NetworkManager.Singleton.Server.SendToAll(message);
 
         PlayerItemHandler itemHandler = player.self.GetComponent<PlayerItemHandler>();

@@ -7,6 +7,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private Transform orientation;
+    [SerializeField] private Transform camTransform;
     [Header("Movement Settings")]
     [SerializeField] private float movementSpeed = 15f;
     [SerializeField] private float midAirMultiplier = 0.1f;
@@ -67,6 +68,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void OnTick(object sender, TickEventArgs e)
     {
+        if (!enabled) return;
         inputFrequency--;
         while (inputQueue.Count > 0 && inputFrequency <= 0)
         {
@@ -88,6 +90,8 @@ public class PlayerMovement : MonoBehaviour
         ClientInputs curInputs = inputQueue.Dequeue();
         SetInputs(curInputs.Inputs);
         orientation.rotation = Quaternion.Euler(curInputs.Orientation);
+        camTransform.rotation = Quaternion.Euler(curInputs.CameraRotation);
+        
         currentRequestNumber = curInputs.RequestNumber;
         inputFrequency++;
 
