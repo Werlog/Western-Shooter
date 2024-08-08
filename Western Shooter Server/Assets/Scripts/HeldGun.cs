@@ -1,5 +1,7 @@
+using Riptide;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using UnityEngine;
 
 public class HeldGun : HeldObject
@@ -31,10 +33,25 @@ public class HeldGun : HeldObject
                 float distance = Vector3.Distance(Look.position, hit.point);
 
                 hitPlayer.Damage(GetDamage(distance), player);
+                SendShootMessage(hitPlayer, hit.point);
+            }else
+            {
+                SendShootMessage(null, hit.point);
             }
 
-            Debug.DrawLine(Look.position, hit.point, Color.red, 5f);
+            Debug.DrawLine(Look.position, hit.point, Color.red, 3f);
         }
+    }
+
+    private void SendShootMessage(Player shotPlayer, Vector3 hitPoint)
+    {
+        Message message = Message.Create(MessageSendMode.Reliable, ServerToClient.playerShoot);
+        message.AddUShort(player.PlayerID);
+        message.AddVector3(hitPoint);
+        message.AddBool(shotPlayer != null);
+        if (shotPlayer != null)
+            message.AddUShort(shotPlayer.PlayerID);
+        NetworkManager.Singleton.Server.SendToAll(message);
     }
 
     private int GetDamage(float distance)

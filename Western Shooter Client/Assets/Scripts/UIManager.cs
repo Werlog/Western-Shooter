@@ -37,9 +37,22 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Animator healthDisplayAnimator;
     [SerializeField] private TextMeshProUGUI healthText;
 
+    [Header("Chat")]
+    [SerializeField] private GameObject chatObject;
+    [SerializeField] private CanvasGroup chatGroup;
+    [SerializeField] private TMP_InputField chatInputField;
+
     private void Awake()
     {
         Singleton = this;
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Semicolon) && NetworkManager.Singleton.Client.IsConnected && !chatInputField.isFocused)
+        {
+            ToggleChat(!chatObject.activeSelf);
+        }
     }
 
     public void ConnectClicked()
@@ -104,5 +117,49 @@ public class UIManager : MonoBehaviour
         {
             healthDisplayAnimator.Play("NormalHealth");
         }
+    }
+
+    IEnumerator ChatAnimation(float duration, bool opening)
+    {
+        if (opening)
+        {
+            chatObject.SetActive(true);
+            chatInputField.Select();
+            chatInputField.ActivateInputField();
+        }
+
+        float timeElapsed = 0f;
+        float startAlpha = chatGroup.alpha;
+
+        while (timeElapsed < duration)
+        {
+            chatGroup.alpha = Mathf.Lerp(startAlpha, opening ? 1f : 0f, timeElapsed / duration);
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        if (!opening)
+            chatObject.SetActive(false);
+    }
+
+    public void ToggleChat(bool state)
+    {
+        Cursor.lockState = state ? CursorLockMode.None : CursorLockMode.Locked;
+        StopAllCoroutines();
+        StartCoroutine(ChatAnimation(0.3f, state));
+    }
+
+    public void OnChatFieldEndEdit()
+    {
+        SendChatMessage(chatInputField.text);
+        chatInputField.text = "";
+        ToggleChat(false);
+    }
+
+    public void SendChatMessage(string chatMessage)
+    {
+        Message message = Message.Create(MessageSendMode.Reliable, ClientToServer.chatMessage);
+        message.AddString(chatMessage);
+        NetworkManager.Singleton.Client.Send(message);
     }
 }

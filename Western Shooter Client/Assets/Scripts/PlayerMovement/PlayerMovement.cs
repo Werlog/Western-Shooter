@@ -8,7 +8,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private Transform orientation;
+    public Transform orientation;
     [SerializeField] private Transform camTransform;
     [Header("Movement Settings")]
     [SerializeField] private float movementSpeed = 15f;
@@ -89,6 +89,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void GetInputs()
     {
+        if (Cursor.lockState != CursorLockMode.Locked) return;
         if (Input.GetKey(KeyCode.W))
         {
             inputs[0] = true;

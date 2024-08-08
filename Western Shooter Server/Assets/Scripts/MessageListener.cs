@@ -74,4 +74,18 @@ public class MessageListener : MonoBehaviour
             }
         }
     }
+
+    [MessageHandler((ushort)ClientToServer.chatMessage)]
+    private static void OnReceiveChatMessage(ushort fromClientId, Message message)
+    {
+        string chatMessage = message.GetString();
+
+
+        // TODO: Make this into a chat and not just a console
+
+        if (GameManager.Singleton.players.TryGetValue(fromClientId, out Player player))
+        {
+            CommandManager.Singleton.ProcessCommand(chatMessage, player);
+        }
+    }
 }

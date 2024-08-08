@@ -8,10 +8,6 @@ public class RagdollSimulator : MonoBehaviour
     private Rigidbody[] rigidbodies;
     private Vector3[] velocities;
 
-    float randomForceDelay = 5f;
-
-    float sinceRandomForce = 0f;
-
     public void OnTick(object sender, TickEventArgs e)
     {
         LoadSavedVelocities();
@@ -21,10 +17,13 @@ public class RagdollSimulator : MonoBehaviour
         SetRigidbodiesKinematic(true);
     }
 
-    private void Start()
+    private void Awake()
     {
         GetRigidbodies();
-        Debug.Log(rigidbodies.Length);
+    }
+
+    private void Start()
+    {
         TickManager.Singleton.TickEventHandler += OnTick;
     }
 
@@ -65,21 +64,14 @@ public class RagdollSimulator : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        sinceRandomForce += Time.deltaTime;
-        if (sinceRandomForce > randomForceDelay)
-        {
-            Vector3 force = new Vector3(Random.Range(-3f, 3f), 10f, Random.Range(-3f, 3f));
-            AddRagdollForce(force);
-
-            sinceRandomForce = 0f;
-        }
-    }
-
     private void GetRigidbodies()
     {
         rigidbodies = gameObject.GetComponentsInChildren<Rigidbody>();
         velocities = new Vector3[rigidbodies.Length];
+
+        for (int i = 0; i < velocities.Length; i++)
+        {
+            velocities[i] = new Vector3(Random.Range(-0.2f, 0.2f), Random.Range(-0.2f, 0.2f), Random.Range(-0.2f, 0.2f));
+        }
     }
 }

@@ -28,6 +28,8 @@ public class Player
 
     public GameObject self;
 
+    private Transform orientation;
+
     public Player(ushort playerID, string username, bool isLocal)
     {
         PlayerID = playerID;
@@ -44,19 +46,42 @@ public class Player
 
         if (IsLocal)
         {
-            GameManager.Singleton.SpawnSpectatorCamera(self.transform.position + Vector3.up, self.transform.eulerAngles);
+            GameManager.Singleton.SpawnSpectatorCamera(self.transform.position + Vector3.up * 0.7f, orientation.rotation);
         }
+
+        Vector3 direction = Vector3.down * 2;
+        if (killer != null)
+        {
+            direction = (self.transform.position - killer.self.transform.position).normalized * 6f;
+            direction.y = 10f;
+        }
+
+        GameManager.Singleton.SpawnRagdoll(self.transform.position, orientation.rotation, direction);
+        GameManager.Singleton.SpawnPlayerDeathParticles(self.transform.position);
     }
 
     public void Respawn(Vector3 position, int health)
     {
         IsAlive = true;
-        this.Health = health;
+        Health = health;
 
         self.SetActive(true);
         self.transform.position = position;
 
         if (IsLocal)
             GameManager.Singleton.DespawnSpectatorCamera();
+    }
+
+    public void SetupOrientation()
+    {
+        if (self == null) return;
+
+        if (IsLocal)
+        {
+            orientation = self.GetComponent<PlayerMovement>().orientation;
+        }else
+        {
+            orientation = self.transform;
+        }
     }
 }

@@ -9,13 +9,16 @@ public class SpectatorCameraLook : MonoBehaviour
     float xRotation = 0f;
     float yRotation = 0f;
 
-    private void Start()
+    private void Awake()
     {
-        Cursor.lockState = CursorLockMode.Locked;
+        xRotation = transform.localRotation.eulerAngles.x;
+        yRotation = transform.localRotation.eulerAngles.y;
     }
 
     void Update()
     {
+        if (Cursor.lockState != CursorLockMode.Locked) return;
+
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
 

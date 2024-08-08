@@ -17,6 +17,8 @@ public class PlayerLook : MonoBehaviour
 
     void Update()
     {
+        if (Cursor.lockState != CursorLockMode.Locked) return;
+
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
 

@@ -32,6 +32,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject localPlayerPrefab;
     [SerializeField] private GameObject remotePlayerPrefab;
 
+    [Header("Effect Prefabs")]
+    [SerializeField] private GameObject playerHitParticlePrefab;
+    [SerializeField] private GameObject playerDeathParticlePrefab;
+    [SerializeField] private GameObject playerRagdollPrefab;
+    [SerializeField] private GameObject bulletParticlePrefab;
+
     public Player LocalPlayer { get; private set; }
 
     private GameObject currentSpectatorCamera;
@@ -56,21 +62,48 @@ public class GameManager : MonoBehaviour
         player.self = playerObject;
         player.self.name = $"{player.Username} (ID: {player.PlayerID})";
 
+        player.SetupOrientation();
+
         if (player.IsLocal)
         {
             UIManager.Singleton.DisableConnectScreen();
         }
     }
 
-    public void SpawnSpectatorCamera(Vector3 position, Vector3 rotation)
+    public void SpawnSpectatorCamera(Vector3 position, Quaternion rotation)
     {
         if (currentSpectatorCamera != null)
         {
             Destroy(currentSpectatorCamera);
         }
 
-        currentSpectatorCamera = Instantiate(spectatorCameraPrefab, position, Quaternion.Euler(rotation));
+        currentSpectatorCamera = Instantiate(spectatorCameraPrefab, position, rotation);
     }
+
+    #region Effect Functions
+    public void SpawnRagdoll(Vector3 position, Quaternion rotation, Vector3 initialVelocity)
+    {
+        GameObject ragdoll = Instantiate(playerRagdollPrefab, position, rotation);
+        
+        RagdollSimulator simulator = ragdoll.GetComponent<RagdollSimulator>();
+        simulator.AddRagdollForce(initialVelocity);
+    }
+
+    public void SpawnPlayerDeathParticles(Vector3 position)
+    {
+        Instantiate(playerDeathParticlePrefab, position, Quaternion.identity);
+    }
+
+    public void SpawnPlayerHitParticles(Vector3 position)
+    {
+        Instantiate(playerHitParticlePrefab, position, Quaternion.identity);
+    }
+    
+    public void SpawnBulletParticles(Vector3 position)
+    {
+        Instantiate(bulletParticlePrefab, position, Quaternion.identity);
+    }
+    #endregion
 
     public void DespawnSpectatorCamera()
     {

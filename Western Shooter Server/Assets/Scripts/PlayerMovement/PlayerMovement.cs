@@ -83,6 +83,11 @@ public class PlayerMovement : MonoBehaviour
 
             SendPosition();
         }
+
+        if (transform.position.y < 2)
+        {
+            player.Damage(1);
+        }
     }
 
     private void SetupInputs()

@@ -7,8 +7,9 @@ using Riptide.Utils;
 public enum ClientToServer : ushort
 {
     username = 0,
-    inputs = 2,
-    useItem = 3,
+    inputs = 1,
+    useItem = 2,
+    chatMessage = 3,
 }
 public enum ServerToClient : ushort
 {
@@ -20,6 +21,7 @@ public enum ServerToClient : ushort
     playerTakeDamage = 5,
     playerDeath = 6,
     playerRespawn = 7,
+    playerShoot = 8,
 }
 public class NetworkManager : MonoBehaviour
 {

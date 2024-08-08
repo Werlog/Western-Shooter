@@ -168,4 +168,25 @@ public class MessageListener : MonoBehaviour
             player.Respawn(position, health);
         }
     }
+
+    [MessageHandler((ushort)ServerToClient.playerShoot)]
+    private static void OnReceivePlayerShoot(Message message)
+    {
+        ushort playerId = message.GetUShort();
+        Vector3 hitPosition = message.GetVector3();
+        bool didHit = message.GetBool();
+
+        if (GameManager.Singleton.players.TryGetValue(playerId, out Player player))
+        {
+            if (!didHit)
+            {
+                GameManager.Singleton.SpawnBulletParticles(hitPosition);
+            }else
+            {
+                GameManager.Singleton.SpawnPlayerHitParticles(hitPosition);
+            }
+
+            // TODO: Hit screen for local player and shooting animation for remote players
+        }
+    }
 }
