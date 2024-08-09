@@ -9,6 +9,7 @@ public class BotStateMachine : MonoBehaviour
 
     public IdleBotState idleState;
     public RandomRoamBotState roamState;
+    public ShootingBotState shootingState;
 
     public bool[] inputs;
     public Vector3 orientation;
@@ -28,6 +29,7 @@ public class BotStateMachine : MonoBehaviour
 
         idleState = new IdleBotState(this);
         roamState = new RandomRoamBotState(this);
+        shootingState = new ShootingBotState(this);
 
         TickManager.Singleton.TickEventHandler += OnTick;
 
@@ -41,7 +43,7 @@ public class BotStateMachine : MonoBehaviour
 
     private void OnTick(object sender, TickEventArgs e)
     {
-        if (!enabled) return;
+        if (!gameObject.activeSelf || !enabled) return;
 
         activeState?.OnTick();
 

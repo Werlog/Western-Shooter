@@ -12,6 +12,9 @@ public class RandomRoamBotState : BaseBotState
 
     private Vector3 currentCorner;
 
+    float targetLookDelay = 1f;
+    float sinceLookedForTarget = 0f;
+
     public RandomRoamBotState(BotStateMachine stateMachine) : base(stateMachine)
     {
         
@@ -40,6 +43,42 @@ public class RandomRoamBotState : BaseBotState
             Pathfind();
             Debug.DrawLine(currentCorner, currentCorner + Vector3.up, Color.blue, 0.1f);
         }
+
+        sinceLookedForTarget += TickManager.Singleton.TimeBetweenTicks;
+
+        if (sinceLookedForTarget > targetLookDelay)
+        {
+            Player shootingTarget = FindShootingTarget();
+            if (shootingTarget != null)
+            {
+                stateMachine.shootingState.target = shootingTarget;
+                stateMachine.SwitchToState(stateMachine.shootingState);
+            }
+            sinceLookedForTarget = 0f;
+        }
+    }
+
+    private Player FindShootingTarget()
+    {
+        Vector3 currentPos = stateMachine.transform.position;
+        foreach (Player player in GameManager.Singleton.players.Values)
+        {
+            if (Physics.Linecast(currentPos, player.self.transform.position, out RaycastHit hit))
+            {
+                if (Vector3.Distance(hit.point, currentPos) <= 0.1f) continue;
+                if (hit.collider.CompareTag("Player"))
+                {
+                    Vector3 direction = (hit.point - currentPos).normalized;
+                    float angle = Vector3.Angle(direction, Quaternion.Euler(stateMachine.look) * Vector3.forward);
+                    if (angle <= 60)
+                    {
+                        return player;
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 
     private void UpdatePath()

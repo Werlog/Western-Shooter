@@ -13,11 +13,22 @@ public class HeldGun : HeldObject
     private void Start()
     {
         sinceShot = gun.shootDelay;
+        TickManager.Singleton.TickEventHandler += OnTick;
+    }
+
+    private void OnDestroy()
+    {
+        TickManager.Singleton.TickEventHandler -= OnTick;
     }
 
     public override void OnAction(HeldObjectAction action)
     {
         if (action == HeldObjectAction.ATTACK) Shoot();
+    }
+
+    public void OnTick(object sender, TickEventArgs e)
+    {
+        sinceShot += TickManager.Singleton.TimeBetweenTicks;
     }
 
     public void Shoot()
@@ -41,6 +52,7 @@ public class HeldGun : HeldObject
 
             Debug.DrawLine(Look.position, hit.point, Color.red, 3f);
         }
+        sinceShot = 0f;
     }
 
     private void SendShootMessage(Player shotPlayer, Vector3 hitPoint)
