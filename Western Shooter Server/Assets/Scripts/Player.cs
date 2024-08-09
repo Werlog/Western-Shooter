@@ -15,18 +15,20 @@ public class Player
 
     public int Health { get; private set; }
     public bool IsAlive { get; private set; }
+    public bool IsBot { get; private set; }
 
     public delegate void PlayerDeathEventHandler(object sender, PlayerDeathEventArgs e);
 
     public event PlayerDeathEventHandler DeathEvent;
 
-    public Player(ushort playerID, string username)
+    public Player(ushort playerID, string username, bool isBot)
     {
         PlayerID = playerID;
         Username = username;
 
         Health = PlayerMaxHealth;
         IsAlive = true;
+        IsBot = isBot;
     }
 
     public void Damage(int amount, Player damager = null)

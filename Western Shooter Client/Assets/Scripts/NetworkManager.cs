@@ -24,6 +24,7 @@ public enum ServerToClient : ushort
     playerDeath = 6,
     playerRespawn = 7,
     playerShoot = 8,
+    removePlayer = 9,
 }
 public class NetworkManager : MonoBehaviour
 {

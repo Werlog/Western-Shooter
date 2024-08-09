@@ -5,6 +5,10 @@ using UnityEngine;
 
 public class RagdollSimulator : MonoBehaviour
 {
+    [SerializeField] private Rigidbody body1;
+    [SerializeField] private Rigidbody body2;
+
+
     private Rigidbody[] rigidbodies;
     private Vector3[] velocities;
 
@@ -56,10 +60,16 @@ public class RagdollSimulator : MonoBehaviour
         }
     }
 
-    public void AddRagdollForce(Vector3 force)
+    public void AddRagdollForce(Vector3 force, bool increasedToBody = false)
     {
-        for (int i = 0;i < velocities.Length; i++)
+        for (int i = 0; i < velocities.Length; i++)
         {
+            if (increasedToBody && (rigidbodies[i] == body1 || rigidbodies[i] == body2))
+            {
+                velocities[i] = velocities[i] + force * 2;
+                continue;
+            }
+
             velocities[i] = velocities[i] + force;
         }
     }
@@ -68,10 +78,5 @@ public class RagdollSimulator : MonoBehaviour
     {
         rigidbodies = gameObject.GetComponentsInChildren<Rigidbody>();
         velocities = new Vector3[rigidbodies.Length];
-
-        for (int i = 0; i < velocities.Length; i++)
-        {
-            velocities[i] = new Vector3(Random.Range(-0.2f, 0.2f), Random.Range(-0.2f, 0.2f), Random.Range(-0.2f, 0.2f));
-        }
     }
 }

@@ -14,13 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Revolver
   id: 0
-  playerPrefab: {fileID: 3136064630113914837, guid: abf4c259e20c87a45b5607ffc9557537, type: 3}
+  playerPrefab: {fileID: 3136064630113914837, guid: abf4c259e20c87a45b5607ffc9557537,
+    type: 3}
   damages:
   - maxDistance: 25
-    bodyDamage: 60
+    bodyDamage: 100
     headshotDamage: 150
   - maxDistance: 50
-    bodyDamage: 40
+    bodyDamage: 80
     headshotDamage: 120
   shootDelay: 0.5
   spread: 0

@@ -52,8 +52,8 @@ public class Player
         Vector3 direction = Vector3.down * 2;
         if (killer != null)
         {
-            direction = (self.transform.position - killer.self.transform.position).normalized * 6f;
-            direction.y = 10f;
+            direction = (self.transform.position - killer.self.transform.position).normalized * 3f;
+            direction.y = 6f;
         }
 
         GameManager.Singleton.SpawnRagdoll(self.transform.position, orientation.rotation, direction);

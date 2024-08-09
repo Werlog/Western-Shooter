@@ -37,6 +37,8 @@ public class CommandManager : MonoBehaviour
         commands.Clear();
 
         commands.Add(new KillCommand());
+        commands.Add(new SpawnBotCommand());
+        commands.Add(new RemoveBotsCommand());
     }
 
     public void ProcessCommand(string commandMessage, Player fromPlayer)

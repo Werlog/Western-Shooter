@@ -86,7 +86,7 @@ public class GameManager : MonoBehaviour
         GameObject ragdoll = Instantiate(playerRagdollPrefab, position, rotation);
         
         RagdollSimulator simulator = ragdoll.GetComponent<RagdollSimulator>();
-        simulator.AddRagdollForce(initialVelocity);
+        simulator.AddRagdollForce(initialVelocity, true);
     }
 
     public void SpawnPlayerDeathParticles(Vector3 position)

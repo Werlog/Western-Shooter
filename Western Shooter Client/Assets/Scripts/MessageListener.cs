@@ -189,4 +189,22 @@ public class MessageListener : MonoBehaviour
             // TODO: Hit screen for local player and shooting animation for remote players
         }
     }
+
+    [MessageHandler((ushort)ServerToClient.removePlayer)]
+    private static void OnReceiveRemovePlayer(Message message)
+    {
+        ushort playerId = message.GetUShort();
+
+        if (GameManager.Singleton.players.TryGetValue(playerId, out Player player))
+        {
+            if (player.IsLocal)
+            {
+                NetworkManager.Singleton.Client.Disconnect();
+            }
+
+            if (player.self != null) Destroy(player.self);
+
+            GameManager.Singleton.players.Remove(playerId);
+        }
+    }
 }

@@ -35,7 +35,7 @@ public class MessageListener : MonoBehaviour
     private static void OnReceiveClientUsername(ushort fromClientId, Message message)
     {
         string username = message.GetString();
-        Player player = new Player(fromClientId, username);
+        Player player = new Player(fromClientId, username, false);
         GameManager.Singleton.AddPlayer(player);
         GameManager.Singleton.SpawnPlayer(player, new Vector3(0, 15, 0));
         TickManager.Singleton.SendTickSync(player);
