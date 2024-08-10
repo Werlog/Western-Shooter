@@ -210,6 +210,20 @@ public class MessageListener : MonoBehaviour
             if (player.self != null) Destroy(player.self);
 
             GameManager.Singleton.players.Remove(playerId);
+            UIManager.Singleton.UpdatePlayerList();
+        }
+    }
+
+    [MessageHandler((ushort)(ServerToClient.playerScore))]
+    private static void OnReceivePlayerScore(Message message)
+    {
+        ushort playerId = message.GetUShort();
+
+        if (GameManager.Singleton.players.TryGetValue(playerId, out Player player))
+        {
+            int score = message.GetInt();
+
+            player.SetScore(score);
         }
     }
 }

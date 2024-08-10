@@ -70,7 +70,7 @@ public class RandomRoamBotState : BaseBotState
                 {
                     Vector3 direction = (hit.point - currentPos).normalized;
                     float angle = Vector3.Angle(direction, Quaternion.Euler(stateMachine.look) * Vector3.forward);
-                    if (angle <= 60)
+                    if (angle <= 85)
                     {
                         return player;
                     }

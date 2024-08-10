@@ -17,6 +17,8 @@ public class Player
     public bool IsAlive { get; private set; }
     public bool IsBot { get; private set; }
 
+    public int Score { get; private set; }
+
     public delegate void PlayerDeathEventHandler(object sender, PlayerDeathEventArgs e);
 
     public event PlayerDeathEventHandler DeathEvent;
@@ -70,6 +72,8 @@ public class Player
         }
         NetworkManager.Singleton.Server.SendToAll(message);
 
+        killer?.AddScore(10);
+
         if (respawn)
             DeathEvent?.Invoke(this, new PlayerDeathEventArgs(this));
     }
@@ -86,6 +90,16 @@ public class Player
         message.AddUShort(PlayerID);
         message.AddInt(Health);
         message.AddVector3(position);
+        NetworkManager.Singleton.Server.SendToAll(message);
+    }
+
+    public void AddScore(int amount)
+    {
+        Score += amount;
+
+        Message message = Message.Create(MessageSendMode.Reliable, (ushort)ServerToClient.playerScore);
+        message.AddUShort(PlayerID);
+        message.AddInt(Score);
         NetworkManager.Singleton.Server.SendToAll(message);
     }
 }

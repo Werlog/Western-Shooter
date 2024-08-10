@@ -54,6 +54,8 @@ public class GameManager : MonoBehaviour
             LocalPlayer = player;
         }
         players.Add(player.PlayerID, player);
+
+        UIManager.Singleton.UpdatePlayerList();
     }
 
     public void SpawnPlayer(Player player, Vector3 position)

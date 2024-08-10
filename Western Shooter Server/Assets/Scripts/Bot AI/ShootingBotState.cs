@@ -9,12 +9,14 @@ public class ShootingBotState : BaseBotState
 
     private PlayerItemHandler itemHandler;
 
-    private float switchDirDelay = 0.25f;
+    private float switchDirDelay = 0.2f;
 
     private float sinceSwitchedDir = 0f;
 
     private float sinceStarted = 0f;
-    private float shootDelay = 0.75f;
+    private float shootDelay = 1f;
+
+    private float inaccuracy = 5f;
 
     bool currentDir = true;
 
@@ -58,6 +60,9 @@ public class ShootingBotState : BaseBotState
         sinceStarted += TickManager.Singleton.TimeBetweenTicks;
 
         Vector3 lookRot = Quaternion.LookRotation((target.self.transform.position - stateMachine.transform.position).normalized).eulerAngles;
+        lookRot.x += Random.Range(-inaccuracy * 0.5f, inaccuracy * 0.5f);
+        lookRot.y += Random.Range(-inaccuracy * 0.5f, inaccuracy * 0.5f);
+        lookRot.z += Random.Range(-inaccuracy * 0.5f, inaccuracy * 0.5f);
         stateMachine.Look(lookRot);
 
         if (sinceStarted > shootDelay)

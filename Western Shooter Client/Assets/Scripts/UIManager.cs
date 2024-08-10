@@ -38,6 +38,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Animator healthDisplayAnimator;
     [SerializeField] private TextMeshProUGUI healthText;
     [SerializeField] private Image hurtOverlay;
+    [SerializeField] private GameObject tabList;
+    [SerializeField] private GameObject playerList;
+    [SerializeField] private GameObject playerListItemPrefab;
 
     [Header("Chat")]
     [SerializeField] private GameObject chatObject;
@@ -54,6 +57,15 @@ public class UIManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Semicolon) && NetworkManager.Singleton.Client.IsConnected && !chatInputField.isFocused)
         {
             ToggleChat(!chatObject.activeSelf);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            tabList.SetActive(true);
+        }
+        if (Input.GetKeyUp(KeyCode.Tab))
+        {
+            tabList.SetActive(false);
         }
 
         hurtOverlay.color = new Color(hurtOverlay.color.r, hurtOverlay.color.g, hurtOverlay.color.b, Mathf.Lerp(hurtOverlay.color.a, 0f, Time.deltaTime * 2f));
@@ -170,5 +182,47 @@ public class UIManager : MonoBehaviour
         Message message = Message.Create(MessageSendMode.Reliable, ClientToServer.chatMessage);
         message.AddString(chatMessage);
         NetworkManager.Singleton.Client.Send(message);
+    }
+
+    public void UpdatePlayerList()
+    {
+        foreach (Transform child in playerList.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        List<Player> players = new List<Player>();
+        players.AddRange(GameManager.Singleton.players.Values);
+
+        players.Sort((p1, p2) => ComparePlayerScores(p1, p2));
+
+        RectTransform playerListRect = playerList.GetComponent<RectTransform>();
+
+        for (int i = 0; i < Mathf.Min(players.Count, 8); i++)
+        {
+            Player player = players[i];
+
+            GameObject listItem = Instantiate(playerListItemPrefab, transform.position, Quaternion.identity);
+            listItem.transform.SetParent(playerList.transform);
+
+
+
+            RectTransform rect = listItem.GetComponent<RectTransform>();
+            rect.anchoredPosition = new Vector2(0, -(30 + i * 60));
+            rect.sizeDelta = new Vector2(playerListRect.sizeDelta.x, rect.sizeDelta.y);
+
+
+            PlayerListItem playerListItem = listItem.GetComponent<PlayerListItem>();
+
+            playerListItem.nameText.text = player.Username;
+            playerListItem.scoreText.text = player.Score.ToString();
+        }
+    }
+
+    private int ComparePlayerScores(Player a, Player b)
+    {
+        if (a.Score > b.Score) return -1;
+        else if (a.Score < b.Score) return 1;
+        else return 0;
     }
 }

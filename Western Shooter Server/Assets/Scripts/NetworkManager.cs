@@ -23,6 +23,7 @@ public enum ServerToClient : ushort
     playerRespawn = 7,
     playerShoot = 8,
     removePlayer = 9,
+    playerScore = 10,
 }
 public class NetworkManager : MonoBehaviour
 {
@@ -69,6 +70,11 @@ public class NetworkManager : MonoBehaviour
             Message message = Message.Create(MessageSendMode.Reliable, ServerToClient.addPlayer);
             message.AddUShort(p.PlayerID);
             message.AddString(p.Username);
+            Singleton.Server.Send(message, player.PlayerID);
+
+            Message scoreMessage = Message.Create(MessageSendMode.Reliable, ServerToClient.playerScore);
+            scoreMessage.AddUShort(p.PlayerID);
+            scoreMessage.AddInt(p.Score);
             Singleton.Server.Send(message, player.PlayerID);
 
             if (p.self != null)

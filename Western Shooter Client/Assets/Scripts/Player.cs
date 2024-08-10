@@ -9,6 +9,7 @@ public class Player
     public ushort PlayerID { get; private set; }
     public string Username { get; private set; }
     public bool IsLocal { get; private set; }
+    public int Score { get; private set; }
 
     private int _health;
 
@@ -88,5 +89,13 @@ public class Player
         {
             orientation = self.transform;
         }
+    }
+
+    public void SetScore(int score)
+    {
+        int diff = Score - score;
+        Score = score;
+
+        UIManager.Singleton.UpdatePlayerList();
     }
 }
