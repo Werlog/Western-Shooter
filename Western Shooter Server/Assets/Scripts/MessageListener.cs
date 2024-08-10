@@ -37,7 +37,7 @@ public class MessageListener : MonoBehaviour
         string username = message.GetString();
         Player player = new Player(fromClientId, username, false);
         GameManager.Singleton.AddPlayer(player);
-        GameManager.Singleton.SpawnPlayer(player, new Vector3(0, 15, 0));
+        GameManager.Singleton.SpawnPlayer(player, GameManager.Singleton.GetRandomSpawnLocation());
         TickManager.Singleton.SendTickSync(player);
     }
 

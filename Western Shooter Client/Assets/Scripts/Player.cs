@@ -17,6 +17,11 @@ public class Player
         get => _health;
         set
         {
+            if (_health > value && IsLocal)
+            {
+                int diff = _health - value;
+                UIManager.Singleton.PlayHurtAnimation(0.6f * (diff / (float)50));
+            }
             _health = value;
             if (IsLocal)
             {
@@ -52,8 +57,8 @@ public class Player
         Vector3 direction = Vector3.down * 2;
         if (killer != null)
         {
-            direction = (self.transform.position - killer.self.transform.position).normalized * 3f;
-            direction.y = 6f;
+            direction = (self.transform.position - killer.self.transform.position).normalized * 4f;
+            direction.y = 3f;
         }
 
         GameManager.Singleton.SpawnRagdoll(self.transform.position, orientation.rotation, direction);

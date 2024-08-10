@@ -33,6 +33,9 @@ public class GameManager : MonoBehaviour
     [Header("Game Settings")]
     [SerializeField] private float respawnDelay = 5f;
 
+    [Header("Spawnpoints")]
+    [SerializeField] private Transform[] spawnPoints;
+
     private ushort currentBotId = 64000;
 
     private void Awake()
@@ -44,7 +47,7 @@ public class GameManager : MonoBehaviour
     {
         Player bot = new Player(NextBotId(), botName, true);
         AddPlayer(bot);
-        SpawnPlayer(bot, new Vector3(0f, 15f, 0f));
+        SpawnPlayer(bot, GetRandomSpawnLocation());
 
         bot.self.AddComponent<BotStateMachine>();
     }
@@ -106,7 +109,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(respawnDelay);
         if (player.self == null) yield break;
 
-        player.Respawn(new Vector3(0, 10, 0));
+        player.Respawn(GetRandomSpawnLocation());
     }
 
     public void SpawnPlayer(Player player, Vector3 position)
@@ -132,5 +135,10 @@ public class GameManager : MonoBehaviour
         {
             itemHandler.EquipHoldable(holdable);
         }
+    }
+
+    public Vector3 GetRandomSpawnLocation()
+    {
+        return spawnPoints[Random.Range(0, spawnPoints.Length)].position;
     }
 }

@@ -186,6 +186,11 @@ public class MessageListener : MonoBehaviour
                 GameManager.Singleton.SpawnPlayerHitParticles(hitPosition);
             }
 
+            if (!player.IsLocal)
+            {
+                player.self.GetComponent<AudioSource>().Play();
+            }
+
             // TODO: Hit screen for local player and shooting animation for remote players
         }
     }

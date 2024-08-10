@@ -54,7 +54,7 @@ public class Player
         }
     }
 
-    public void Die(Player killer = null)
+    public void Die(Player killer = null, bool respawn = true)
     {
         if (!IsAlive) return;
 
@@ -70,7 +70,8 @@ public class Player
         }
         NetworkManager.Singleton.Server.SendToAll(message);
 
-        DeathEvent?.Invoke(this, new PlayerDeathEventArgs(this));
+        if (respawn)
+            DeathEvent?.Invoke(this, new PlayerDeathEventArgs(this));
     }
 
     public void Respawn(Vector3 position)

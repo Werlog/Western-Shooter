@@ -18,10 +18,10 @@ MonoBehaviour:
     type: 3}
   damages:
   - maxDistance: 25
-    bodyDamage: 100
+    bodyDamage: 60
     headshotDamage: 150
   - maxDistance: 50
-    bodyDamage: 80
+    bodyDamage: 40
     headshotDamage: 120
   shootDelay: 0.5
   spread: 0

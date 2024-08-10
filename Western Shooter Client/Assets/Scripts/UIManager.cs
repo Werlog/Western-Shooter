@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Riptide;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -36,6 +37,7 @@ public class UIManager : MonoBehaviour
     [Header("HUD")]
     [SerializeField] private Animator healthDisplayAnimator;
     [SerializeField] private TextMeshProUGUI healthText;
+    [SerializeField] private Image hurtOverlay;
 
     [Header("Chat")]
     [SerializeField] private GameObject chatObject;
@@ -53,6 +55,8 @@ public class UIManager : MonoBehaviour
         {
             ToggleChat(!chatObject.activeSelf);
         }
+
+        hurtOverlay.color = new Color(hurtOverlay.color.r, hurtOverlay.color.g, hurtOverlay.color.b, Mathf.Lerp(hurtOverlay.color.a, 0f, Time.deltaTime * 2f));
     }
 
     public void ConnectClicked()
@@ -117,6 +121,11 @@ public class UIManager : MonoBehaviour
         {
             healthDisplayAnimator.Play("NormalHealth");
         }
+    }
+
+    public void PlayHurtAnimation(float intensity)
+    {
+        hurtOverlay.color = new Color(hurtOverlay.color.r, hurtOverlay.color.g, hurtOverlay.color.b, hurtOverlay.color.a + intensity);
     }
 
     IEnumerator ChatAnimation(float duration, bool opening)
