@@ -17,6 +17,16 @@ public class IdleBotState : BaseBotState
         
     }
 
+    public override void OnAttractAttention(AttentionAttractEventArgs e)
+    {
+        
+    }
+
+    public override void OnDamaged(PlayerDamagedEventArgs e)
+    {
+        
+    }
+
     public override void OnTick()
     {
 

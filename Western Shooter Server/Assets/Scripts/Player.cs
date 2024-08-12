@@ -21,7 +21,11 @@ public class Player
 
     public delegate void PlayerDeathEventHandler(object sender, PlayerDeathEventArgs e);
 
-    public event PlayerDeathEventHandler DeathEvent;
+    public static event PlayerDeathEventHandler DeathEvent;
+
+    public delegate void PlayerDamagedEventHandler(object sender, PlayerDamagedEventArgs e);
+
+    public static event PlayerDamagedEventHandler DamagedEvent;
 
     public Player(ushort playerID, string username, bool isBot)
     {
@@ -49,6 +53,7 @@ public class Player
         }
         NetworkManager.Singleton.Server.SendToAll(message);
 
+        DamagedEvent?.Invoke(this, new PlayerDamagedEventArgs(this, damager));
 
         if (Health <= 0)
         {
@@ -110,5 +115,16 @@ public class PlayerDeathEventArgs : EventArgs
     public PlayerDeathEventArgs(Player player)
     {
         this.player = player;
+    }
+}
+public class PlayerDamagedEventArgs : EventArgs
+{
+    public readonly Player damagedPlayer;
+    public readonly Player attacker;
+
+    public PlayerDamagedEventArgs(Player damagedPlayer, Player attacker)
+    {
+        this.damagedPlayer = damagedPlayer;
+        this.attacker = attacker;
     }
 }

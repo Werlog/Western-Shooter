@@ -41,6 +41,8 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         Singleton = this;
+
+        Player.DeathEvent += OnPlayerDeath;
     }
 
     public void JoinBot(string botName)
@@ -120,8 +122,6 @@ public class GameManager : MonoBehaviour
         player.self = playerObject;
         player.self.name = $"{player.Username} (ID: {player.PlayerID})" + (player.IsBot ? " BOT" : "");
         player.self.GetComponent<PlayerMovement>().player = player;
-
-        player.DeathEvent += OnPlayerDeath;
 
         Message message = Message.Create(MessageSendMode.Reliable, ServerToClient.spawnPlayer);
         message.AddUShort(player.PlayerID);

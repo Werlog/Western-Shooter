@@ -14,4 +14,6 @@ public abstract class BaseBotState
     public abstract void EnterState();
     public abstract void ExitState();
     public abstract void OnTick();
+    public abstract void OnDamaged(PlayerDamagedEventArgs e);
+    public abstract void OnAttractAttention(AttentionAttractEventArgs e);
 }

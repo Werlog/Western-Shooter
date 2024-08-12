@@ -60,6 +60,11 @@ public class Player
         {
             direction = (self.transform.position - killer.self.transform.position).normalized * 4f;
             direction.y = 3f;
+
+            if (killer.IsLocal)
+            {
+                UIManager.Singleton.ShowKillEffect();
+            }
         }
 
         GameManager.Singleton.SpawnRagdoll(self.transform.position, orientation.rotation, direction);

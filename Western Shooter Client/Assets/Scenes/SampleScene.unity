@@ -290,6 +290,8 @@ MonoBehaviour:
   playerList: {fileID: 1953297720}
   playerListItemPrefab: {fileID: 2320834678562910173, guid: ecd2675b7c0a97848aa2e775c922f153,
     type: 3}
+  killEffectPrefab: {fileID: 5132387907126389881, guid: d95952f364632d841a93a8cc130fe98b,
+    type: 3}
   chatObject: {fileID: 1906008176}
   chatGroup: {fileID: 1906008178}
   chatInputField: {fileID: 538637200}

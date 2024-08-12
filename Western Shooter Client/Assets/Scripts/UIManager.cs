@@ -41,6 +41,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject tabList;
     [SerializeField] private GameObject playerList;
     [SerializeField] private GameObject playerListItemPrefab;
+    [SerializeField] private GameObject killEffectPrefab;
 
     [Header("Chat")]
     [SerializeField] private GameObject chatObject;
@@ -198,8 +199,9 @@ public class UIManager : MonoBehaviour
 
         RectTransform playerListRect = playerList.GetComponent<RectTransform>();
 
-        for (int i = 0; i < Mathf.Min(players.Count, 8); i++)
+        for (int i = 0; i < players.Count; i++)
         {
+            float ypos = -(30 + i * 60);
             Player player = players[i];
 
             GameObject listItem = Instantiate(playerListItemPrefab, transform.position, Quaternion.identity);
@@ -208,7 +210,7 @@ public class UIManager : MonoBehaviour
 
 
             RectTransform rect = listItem.GetComponent<RectTransform>();
-            rect.anchoredPosition = new Vector2(0, -(30 + i * 60));
+            rect.anchoredPosition = new Vector2(0, ypos);
             rect.sizeDelta = new Vector2(playerListRect.sizeDelta.x, rect.sizeDelta.y);
 
 
@@ -217,6 +219,12 @@ public class UIManager : MonoBehaviour
             playerListItem.nameText.text = player.Username;
             playerListItem.scoreText.text = player.Score.ToString();
         }
+    }
+
+    public void ShowKillEffect()
+    {
+        Transform uiObject = Instantiate(killEffectPrefab, transform.position, Quaternion.identity).transform;
+        uiObject.SetParent(transform);
     }
 
     private int ComparePlayerScores(Player a, Player b)

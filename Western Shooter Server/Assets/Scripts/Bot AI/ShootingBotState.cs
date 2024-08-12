@@ -14,11 +14,13 @@ public class ShootingBotState : BaseBotState
     private float sinceSwitchedDir = 0f;
 
     private float sinceStarted = 0f;
-    private float shootDelay = 1f;
+    private float shootDelay = 0.75f;
 
     private float inaccuracy = 5f;
 
     bool currentDir = true;
+
+    bool switchToChasing = false;
 
     public ShootingBotState(BotStateMachine stateMachine) : base(stateMachine) { }
 
@@ -32,15 +34,27 @@ public class ShootingBotState : BaseBotState
 
     public override void ExitState()
     {
+        switchToChasing = false;
         sinceSwitchedDir = 0f;
         sinceStarted = 0f;
+    }
+
+    public override void OnAttractAttention(AttentionAttractEventArgs e)
+    {
+        
     }
 
     public override void OnTick()
     {
         if (!LookForTarget())
         {
-            stateMachine.SwitchToState(stateMachine.roamState);
+            if (!switchToChasing)
+                stateMachine.SwitchToState(stateMachine.roamState);
+            else
+            {
+                stateMachine.chasingState.target = target.self.transform.position;
+                stateMachine.SwitchToState(stateMachine.chasingState);
+            }
             return;
         }
 
@@ -69,6 +83,11 @@ public class ShootingBotState : BaseBotState
             itemHandler.currentHeldObject?.OnAction(HeldObjectAction.ATTACK);
     }
 
+    public override void OnDamaged(PlayerDamagedEventArgs e)
+    {
+        
+    }
+
     public bool LookForTarget()
     {
         if (target.self == null) return false;
@@ -77,7 +96,10 @@ public class ShootingBotState : BaseBotState
         if (Physics.Linecast(stateMachine.transform.position, target.self.transform.position, out RaycastHit hit))
         {
             if (!hit.collider.CompareTag("Player"))
+            {
+                switchToChasing = true;
                 return false;
+            }
         }
 
         return true;

@@ -8,10 +8,6 @@ public class RandomRoamBotState : BaseBotState
     float sincePathUpdate = 0f;
     float pathUpdateDelay = 5f;
 
-    private List<Vector3> pathCorners = new List<Vector3>();
-
-    private Vector3 currentCorner;
-
     float targetLookDelay = 1f;
     float sinceLookedForTarget = 0f;
 
@@ -27,8 +23,25 @@ public class RandomRoamBotState : BaseBotState
 
     public override void ExitState()
     {
-        currentCorner = Vector3.zero;
-        pathCorners.Clear();
+        stateMachine.currentCorner = Vector3.zero;
+        stateMachine.pathCorners.Clear();
+    }
+
+    public override void OnAttractAttention(AttentionAttractEventArgs e)
+    {
+        if (Vector3.Distance(stateMachine.transform.position, e.position) > 30f) return;
+        if (Random.Range(0, 101) < 20)
+        {
+            Debug.Log($"{stateMachine.player.Username} found the sound at {e.position} very interesting");
+            stateMachine.chasingState.target = e.position + new Vector3(Random.Range(-10f, 10f), 0f, Random.Range(-10f, 10f));
+            stateMachine.SwitchToState(stateMachine.chasingState);
+        }
+    }
+
+    public override void OnDamaged(PlayerDamagedEventArgs e)
+    {
+        if (e.damagedPlayer.Health > 0)
+            stateMachine.LookForTargetAndShoot(150);
     }
 
     public override void OnTick()
@@ -40,15 +53,19 @@ public class RandomRoamBotState : BaseBotState
             UpdatePath();
         }else
         {
-            Pathfind();
-            Debug.DrawLine(currentCorner, currentCorner + Vector3.up, Color.blue, 0.1f);
+            stateMachine.Pathfind();
+            if (stateMachine.currentCorner == Vector3.zero)
+            {
+                UpdatePath();
+            }
+            Debug.DrawLine(stateMachine.currentCorner, stateMachine.currentCorner + Vector3.up, Color.blue, 0.1f);
         }
 
         sinceLookedForTarget += TickManager.Singleton.TimeBetweenTicks;
 
         if (sinceLookedForTarget > targetLookDelay)
         {
-            Player shootingTarget = FindShootingTarget();
+            Player shootingTarget = stateMachine.FindShootingTarget();
             if (shootingTarget != null)
             {
                 stateMachine.shootingState.target = shootingTarget;
@@ -58,75 +75,11 @@ public class RandomRoamBotState : BaseBotState
         }
     }
 
-    private Player FindShootingTarget()
-    {
-        Vector3 currentPos = stateMachine.transform.position;
-        foreach (Player player in GameManager.Singleton.players.Values)
-        {
-            if (Physics.Linecast(currentPos, player.self.transform.position, out RaycastHit hit))
-            {
-                if (Vector3.Distance(hit.point, currentPos) <= 0.1f) continue;
-                if (hit.collider.CompareTag("Player"))
-                {
-                    Vector3 direction = (hit.point - currentPos).normalized;
-                    float angle = Vector3.Angle(direction, Quaternion.Euler(stateMachine.look) * Vector3.forward);
-                    if (angle <= 85)
-                    {
-                        return player;
-                    }
-                }
-            }
-        }
-
-        return null;
-    }
-
     private void UpdatePath()
     {
-        pathCorners.Clear();
-        currentCorner = Vector3.zero;
-        NavMeshPath path = new NavMeshPath();
-        Vector3 currentPosition = stateMachine.transform.position;
-        bool success = NavMesh.CalculatePath(currentPosition, currentPosition + new Vector3(Random.Range(-20f, 20f), 1f, Random.Range(-20f, 20f)), NavMesh.AllAreas, path);
+        bool success = stateMachine.PathTo(stateMachine.transform.position + new Vector3(Random.Range(-20f, 20f), 1f, Random.Range(-20f, 20f)));
         if (!success) return;
-        pathCorners.AddRange(path.corners);
 
         sincePathUpdate = 0f;
-    }
-
-    private void Pathfind()
-    {
-        CheckForNextCorner();
-        if (currentCorner != Vector3.zero)
-        {
-            Vector3 position = stateMachine.transform.position;
-            Vector3 lookRot = Quaternion.LookRotation((currentCorner - position).normalized).eulerAngles;
-
-            stateMachine.Look(lookRot);
-            stateMachine.inputs[0] = true;
-        }
-    }
-
-    private void CheckForNextCorner()
-    {
-        if (pathCorners.Count <= 0) return;
-
-        Vector3 pos1 = stateMachine.transform.position;
-        Vector3 pos2 = currentCorner;
-
-        pos1.y = 0f;
-        pos2.y = 0f;
-
-        if (currentCorner == Vector3.zero || Vector3.Distance(pos1, pos2) <= 0.25f)
-        {
-            pathCorners.RemoveAt(0);
-            if (pathCorners.Count > 0)
-            {
-                currentCorner = pathCorners[0];
-            }else
-            {
-                currentCorner = Vector3.zero;
-            }
-        }
     }
 }

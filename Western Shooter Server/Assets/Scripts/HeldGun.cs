@@ -51,6 +51,8 @@ public class HeldGun : HeldObject
             }
 
             Debug.DrawLine(Look.position, hit.point, Color.red, 3f);
+
+            BotStateMachine.TriggerEvent(Look.position - Vector3.up);
         }
         sinceShot = 0f;
     }
