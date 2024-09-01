@@ -1,1 +1,1 @@
-A small multiplayer first person shooter in the western style.
+A simple multiplayer first person shooter game I am making in Unity.
